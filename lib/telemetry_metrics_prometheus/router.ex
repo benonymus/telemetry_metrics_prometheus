@@ -1,14 +1,15 @@
 defmodule TelemetryMetricsPrometheus.Router do
   @moduledoc false
-
   use Plug.Router
   alias Plug.Conn
+  require Logger
 
   plug(:match)
   plug(Plug.Telemetry, event_prefix: [:prometheus_metrics, :plug])
   plug(:dispatch, builder_opts())
 
   get "/metrics" do
+    Logger.info("Scraping")
     name = opts[:name]
     metrics = TelemetryMetricsPrometheus.Core.scrape(name)
 
